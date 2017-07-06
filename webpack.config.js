@@ -3,6 +3,7 @@ const WebpackNotifierPlugin = require('webpack-notifier');
 const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
 const InterpolateLoaderOptionsPlugin = require('interpolate-loader-options-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
+const fixSvgDimensions = require('./_scripts/svg-dimension');
 const paths = require('./_scripts/paths');
 
 const nodeEnv = process.env.NODE_ENV || 'development';
@@ -14,7 +15,6 @@ if (isProd) {
 
 const basePlugins = [
   new CleanObsoleteChunks(),
-  new webpack.optimize.ModuleConcatenationPlugin(),
   new WebpackNotifierPlugin(),
   new webpack.DefinePlugin({
     'process.env': { NODE_ENV: JSON.stringify(nodeEnv) },
@@ -33,15 +33,16 @@ const basePlugins = [
 ];
 
 const prodPlugins = [
+  new webpack.LoaderOptionsPlugin({
+    debug: true,
+    minimize: true,
+  }),
   new webpack.optimize.OccurrenceOrderPlugin(),
+  new webpack.optimize.ModuleConcatenationPlugin(),
   new webpack.optimize.UglifyJsPlugin({
     output: {
       comments: false,
     },
-  }),
-  new webpack.LoaderOptionsPlugin({
-    debug: true,
-    minimize: true,
   }),
 ];
 
@@ -70,6 +71,7 @@ const config = {
     rules: [
       {
         test: /\.js$/,
+        exclude: /(node_modules)/,
         use: {
           loader: 'babel-loader',
           options: {
@@ -81,7 +83,15 @@ const config = {
         test: /\.svg$/,
         use: [
           {
-            loader: 'preact-svg-loader',
+            loader: 'raw-loader',
+          },
+          {
+            loader: 'skeleton-loader',
+            options: {
+              procedure(content) {
+                return fixSvgDimensions(content);
+              },
+            },
           },
           {
             loader: 'svgo-loader',
@@ -94,7 +104,7 @@ const config = {
     ],
   },
   resolve: {
-    modules: ['node_modules', paths.src.js, paths.src.svg],
+    modules: ['node_modules', paths.src.svg, paths.src.js],
   },
   devtool: 'cheap-module-source-map',
   plugins: isProd ? [...basePlugins, ...prodPlugins] : basePlugins,

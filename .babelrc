@@ -5,20 +5,16 @@
         "transform-object-rest-spread",
         "transform-class-properties",
         "syntax-dynamic-import",
-        ["transform-react-jsx", { "pragma":"h" }]
+        "transform-decorators-legacy"
       ],
       "presets": [
         [
           "env",
           {
             "targets": {
-              "browsers": [
-                "last 1 Chrome versions",
-                "last 1 Firefox versions"
-              ]
+              "browsers": ["last 1 Chrome versions", "last 1 Firefox versions"]
             },
-            "modules": false,
-            "loose": true
+            "modules": false
           }
         ]
       ]
@@ -28,7 +24,16 @@
         "transform-object-rest-spread",
         "transform-class-properties",
         "syntax-dynamic-import",
-        ["transform-react-jsx", { "pragma":"h" }]
+        "transform-decorators-legacy",
+        [
+          "transform-imports",
+          {
+            "lodash": {
+              "transform": "lodash/${member}",
+              "preventFullImport": true
+            }
+          }
+        ]
       ],
       "presets": [
         [
@@ -36,11 +41,9 @@
           {
             "useBuiltIns": true,
             "debug": false,
+            "modules": false,
             "targets": {
-              "browsers": [
-                "last 2 versions",
-                "not ie <= 10"
-              ]
+              "browsers": ["last 2 versions", "not ie <= 10"]
             }
           }
         ]

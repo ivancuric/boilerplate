@@ -26,8 +26,9 @@ const sassGlob = require('gulp-sass-glob');
 const sourcemaps = require('gulp-sourcemaps');
 const SVGO = require('svgo');
 const template = require('gulp-template');
-const xml2js = require('xml2js');
 const watch = require('gulp-watch');
+
+const fixSvgDimensions = require('./_scripts/svg-dimension');
 
 // Paths
 const paths = require('./_scripts/paths');
@@ -45,40 +46,11 @@ const errorHandler = notify.onError(error => `Error: ${error.message}`);
 // sass configuration
 const sassConfig = { includePaths: ['./node_modules/'] };
 
-// xmlparser instances
-const XMLparser = new xml2js.Parser();
-const XMLbuilder = new xml2js.Builder();
-
 // svgo settings
 const coreSvgoPlugins = [
   { removeAttrs: { attrs: ['data-name'] } },
   { removeTitle: true }
 ];
-
-// fix svg dimensions for templating
-const fixSvgDimensions = svgString => {
-  let parsed;
-  XMLparser.parseString(svgString, (err, result) => {
-    parsed = result;
-  });
-
-  const svg = parsed.svg.$;
-
-  if (svg.width && svg.height && svg.viewBox === undefined) {
-    svg.viewBox = `0 0 ${svg.width} ${svg.height}`;
-  } else {
-    if (svg.viewBox === undefined) {
-      console.error('no available dimensions');
-      return;
-    }
-
-    const viewBox = svg.viewBox.split(' ');
-    svg.width = viewBox[2];
-    svg.height = viewBox[3];
-  }
-
-  return XMLbuilder.buildObject(parsed);
-};
 
 // runs svg through svgo
 const optimizeSvg = (svgString, plugins) => {
@@ -100,6 +72,7 @@ const getSvg = filename => {
     { addAttributesToSVGElement: { attribute: 'aria-hidden="true"' } }
   );
   const svgString = fs.readFileSync(`${paths.src.svg}${filename}.svg`, 'utf-8');
+
   return optimizeSvg(fixSvgDimensions(svgString), plugins);
 };
 

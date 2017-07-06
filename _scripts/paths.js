@@ -13,15 +13,18 @@ exports.src = {
   markdown: DIR_SRC + '/markdown/',
   styles  : DIR_SRC + '/styles/',
   svg     : DIR_SRC + '/assets/svg/',
+  fonts   : DIR_SRC + '/assets/fonts/',
+  root    : DIR_SRC + '/',
 };
 
 // prettier-ignore
 exports.dist = {
-  assets: DIR_DIST + '/public/assets/',
+  assets: DIR_DIST + '/assets/',
   html  : DIR_DIST + '/html/',
-  js    : DIR_DIST + '/public/js/',
-  styles: DIR_DIST + '/public/styles/',
-  svg   : DIR_DIST + '/public/assets/svg/',
+  js    : DIR_DIST + '/js/',
+  styles: DIR_DIST + '/styles/',
+  svg   : DIR_DIST + '/assets/svg/',
+  fonts : DIR_DIST + '/assets/fonts/',
   root  : DIR_DIST + '/',
 };
 
@@ -29,8 +32,9 @@ exports.dist = {
 exports.temp = {
   assets: DIR_TEMP + '/public/assets/',
   html  : DIR_TEMP + '/html/',
-  js    : DIR_TEMP + '/public/js/',
-  styles: DIR_TEMP + '/public/styles/',
-  svg   : DIR_TEMP + '/public/assets/svg/',
+  js    : DIR_TEMP + '/js/',
+  styles: DIR_TEMP + '/styles/',
+  svg   : DIR_TEMP + '/assets/svg/',
+  fonts : DIR_TEMP + '/assets/fonts/',
   root  : DIR_TEMP + '/',
 };

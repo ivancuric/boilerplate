@@ -1,3 +1,16 @@
+########################
+# CUSTOM
+########################
+
+celerybeat.pid
+celery_settings.py
+*.orig
+*.gz
+.project
+*.mo
+yarn.lock
+package-lock.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -26,8 +39,6 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-package-lock.json
-yarn.lock
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -195,6 +206,10 @@ bh_unicode_properties.cache
 GitHub.sublime-settings
 
 .vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
 db.sqlite3
 
@@ -244,3 +259,10 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+
+# Custom
+locale
+log
+media
+.idea
