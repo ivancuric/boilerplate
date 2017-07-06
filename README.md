@@ -1,6 +1,6 @@
 ## Requirements:
 
-* node > 7.x.x
+* node > 8.x.x
 * yarn
 
 Install node using nvm.
