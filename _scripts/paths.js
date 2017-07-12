@@ -30,7 +30,7 @@ exports.dist = {
 
 // prettier-ignore
 exports.temp = {
-  assets: DIR_TEMP + '/public/assets/',
+  assets: DIR_TEMP + '/assets/',
   html  : DIR_TEMP + '/html/',
   js    : DIR_TEMP + '/js/',
   styles: DIR_TEMP + '/styles/',

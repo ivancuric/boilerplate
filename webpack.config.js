@@ -3,6 +3,7 @@ const WebpackNotifierPlugin = require('webpack-notifier');
 const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
 const InterpolateLoaderOptionsPlugin = require('interpolate-loader-options-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
+const fs = require('fs-extra');
 const fixSvgDimensions = require('./_scripts/svg-dimension');
 const paths = require('./_scripts/paths');
 
@@ -11,6 +12,13 @@ const isProd = nodeEnv === 'production';
 
 if (isProd) {
   paths.dist = paths.temp;
+}
+
+const manifestPath = paths.dist.root + 'manifest.json';
+const manifestExists = fs.existsSync(manifestPath);
+
+if (!manifestExists) {
+  fs.outputJsonSync(manifestPath, {});
 }
 
 const basePlugins = [
@@ -23,13 +31,14 @@ const basePlugins = [
     loaders: [
       {
         name: 'svgo-loader',
-        // 3 is the index of your plugin in the array of plugins.
-        // 1 is the index of the class name you want to interpolate.
         include: ['plugins.3.addClassesToSVGElement.classNames.1'],
       },
     ],
   }),
-  new ManifestPlugin(),
+  new ManifestPlugin({
+    fileName: '../manifest.json',
+    cache: JSON.parse(fs.readFileSync(manifestPath, 'utf8')),
+  }),
 ];
 
 const prodPlugins = [

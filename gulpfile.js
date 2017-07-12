@@ -14,7 +14,6 @@ const md = require('markdown-it')();
 const mqpacker = require('css-mqpacker');
 const notify = require('gulp-notify');
 const flatmap = require('gulp-flatmap');
-const fileExtension = require('file-extension');
 const path = require('path');
 const plumber = require('gulp-plumber');
 const postcss = require('gulp-postcss');
@@ -87,10 +86,7 @@ gulp.task('svg', () => {
         const classNames = ['svg', filename];
         plugins.push({ addClassesToSVGElement: { classNames } });
         file.contents = new Buffer(
-          optimizeSvg(
-            fixSvgDimensions(file.contents.toString('utf8')),
-            plugins
-          )
+          optimizeSvg(fixSvgDimensions(file.contents.toString('utf8')), plugins)
         );
         return stream;
       })
@@ -98,25 +94,16 @@ gulp.task('svg', () => {
     .pipe(gulp.dest(paths.dist.svg));
 });
 
-// hash assets
+// write hashed assets in html
 const getHash = filename => {
-  const ext = fileExtension(filename);
-  let manifestPath;
-  let manifest;
-
-  if (ext === 'js') {
-    manifestPath = paths.dist.js;
-  }
-
-  if (ext === 'css') {
-    manifestPath = paths.dist.styles;
-  }
-
   try {
-    manifest = JSON.parse(
-      fs.readFileSync(manifestPath + 'manifest.json', 'utf8')
+    const manifest = JSON.parse(
+      fs.readFileSync(paths.dist.root + 'manifest.json', 'utf8')
     );
-    return manifest[filename];
+    if (manifest[filename]) {
+      return manifest[filename];
+    }
+    return filename;
   } catch (err) {
     return filename;
   }
@@ -210,7 +197,7 @@ gulp.task('styles-production', () =>
     .pipe(postcss(postCssProc))
     .pipe(gulp.dest(paths.dist.styles))
     .pipe(rev.manifest({ path: 'manifest.json' }))
-    .pipe(gulp.dest(paths.dist.styles))
+    .pipe(gulp.dest(paths.dist.root))
 );
 
 // build / move all assets (raster & svg)
